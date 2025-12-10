@@ -78,7 +78,17 @@ export default {
   padding: 10px;
 }
 
+.upload-demo {
+  width: 100%;
+}
+
+.upload-demo :deep(.el-upload) {
+  width: 100%;
+  display: block;
+}
+
 .upload-demo :deep(.el-upload-dragger) {
+  width: 100%;
   padding: 20px;
   height: 140px;
   display: flex;
@@ -88,6 +98,7 @@ export default {
   border: 2px dashed #dcdfe6;
   border-radius: 8px;
   transition: border-color 0.3s;
+  box-sizing: border-box;
 }
 
 .upload-demo :deep(.el-upload-dragger:hover) {

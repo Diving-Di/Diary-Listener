@@ -12,11 +12,12 @@
       >
         <div class="image-wrapper">
           <el-image 
-            :src="item.thumbnail || item.image" 
-            :preview-src-list="[item.image]"
+            :src="getFullUrl(item.thumbnail || item.image)" 
+            :preview-src-list="[getFullUrl(item.image)]"
             fit="cover"
             class="gallery-image"
             loading="lazy"
+            preview-teleported
           >
             <template #error>
               <div class="image-slot">
@@ -106,6 +107,14 @@ export default {
           ElMessage.error('图片删除失败')
         }
       }
+    },
+    getFullUrl(url) {
+      if (!url) return ''
+      if (url.startsWith('http') || url.startsWith('https')) {
+        return url
+      }
+      const baseUrl = API.replace(/\/api\/?$/, '')
+      return `${baseUrl}${url}`
     }
   }
 }
@@ -120,12 +129,12 @@ export default {
 }
 
 .gallery-item {
-  width: 220px;
+  width: 260px;
   flex-shrink: 0;
 }
 
 .image-wrapper {
-  height: 160px;
+  height: 300px;
   overflow: hidden;
   background-color: #f5f7fa;
   display: flex;

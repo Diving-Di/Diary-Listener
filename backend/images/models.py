@@ -3,6 +3,8 @@ from io import BytesIO
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.files.base import ContentFile
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from PIL import Image as PilImage
 from PIL.ExifTags import TAGS
 from datetime import datetime
@@ -83,3 +85,9 @@ class Image(models.Model):
 
     def __str__(self):
         return os.path.basename(self.image.name)
+
+@receiver(post_delete, sender=Image)
+def submission_delete(sender, instance, **kwargs):
+    instance.image.delete(False)
+    if instance.thumbnail:
+        instance.thumbnail.delete(False)
