@@ -1,29 +1,58 @@
 <template>
-  <div>
-    <div v-if="loading">加载中...</div>
-    <div v-else class="grid">
-      <div v-for="item in images" :key="item.id" class="card">
-        <img :src="item.thumbnail || item.image" class="thumb" />
-        <div style="margin-top:8px">{{ item.image.split('/').pop() }}</div>
-        <div style="margin-top:6px">
-          <button class="btn btn-danger" @click="remove(item.id)">删除</button>
+  <div v-loading="loading">
+    <el-empty v-if="!loading && images.length === 0" description="未找到图片" />
+    
+    <div v-else class="gallery-grid">
+      <el-card 
+        v-for="item in images" 
+        :key="item.id" 
+        :body-style="{ padding: '0px' }" 
+        shadow="hover"
+        class="gallery-item"
+      >
+        <div class="image-wrapper">
+          <el-image 
+            :src="item.thumbnail || item.image" 
+            :preview-src-list="[item.image]"
+            fit="cover"
+            class="gallery-image"
+            loading="lazy"
+          >
+            <template #error>
+              <div class="image-slot">
+                <el-icon><icon-picture /></el-icon>
+              </div>
+            </template>
+          </el-image>
         </div>
-      </div>
+        <div class="card-content">
+          <div class="image-name" :title="item.image.split('/').pop()">
+            {{ item.image.split('/').pop() }}
+          </div>
+          <div class="card-actions">
+            <el-button type="danger" :icon="Delete" circle size="small" @click="remove(item.id)" />
+          </div>
+        </div>
+      </el-card>
     </div>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
+import { Delete, Picture as IconPicture } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const API = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api'
 
 export default {
+  components: { IconPicture },
   props: ['token'],
   data() {
     return {
       images: [],
-      loading: false
+      loading: false,
+      Delete
     }
   },
   watch: {
@@ -49,23 +78,98 @@ export default {
         this.images = res.data
       } catch (err) {
         console.error(err)
-        alert('获取图片失败')
+        ElMessage.error('获取图片失败')
       } finally {
         this.loading = false
       }
     },
     async remove(id) {
-      if (!confirm('确定删除这张图片吗？')) return
       try {
+        await ElMessageBox.confirm(
+          '你想要删除这张图片吗？',
+          '警告',
+          {
+            confirmButtonText: '删除',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        )
+        
         await axios.delete(`${API}/images/${id}/`, {
           headers: { 'Authorization': `Token ${this.token}` }
         })
+        ElMessage.success('图片已删除')
         this.fetchImages()
       } catch (err) {
-        console.error(err)
-        alert('删除失败')
+        if (err !== 'cancel') {
+          console.error(err)
+          ElMessage.error('图片删除失败')
+        }
       }
     }
   }
 }
 </script>
+
+<style scoped>
+.gallery-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.gallery-item {
+  width: 220px;
+  flex-shrink: 0;
+}
+
+.image-wrapper {
+  height: 160px;
+  overflow: hidden;
+  background-color: #f5f7fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.gallery-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.gallery-image:hover {
+  transform: scale(1.05);
+}
+
+.image-slot {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  background: #f5f7fa;
+  color: #909399;
+  font-size: 30px;
+}
+
+.card-content {
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+}
+
+.image-name {
+  font-size: 13px;
+  color: #606266;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+</style>
