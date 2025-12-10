@@ -4,9 +4,12 @@
       class="upload-demo"
       drag
       action="#"
+      multiple
       :auto-upload="false"
-      :on-change="handleFileChange"
-      :show-file-list="false"
+      :file-list="fileList"
+      :on-change="handleChange"
+      :on-remove="handleRemove"
+      :show-file-list="true"
     >
       <el-icon class="el-icon--upload"><upload-filled /></el-icon>
       <div class="el-upload__text">
@@ -14,14 +17,11 @@
       </div>
     </el-upload>
 
-    <div v-if="file" class="preview-area">
-      <div class="file-info">
-        <el-icon><Document /></el-icon>
-        <span>{{ file.name }}</span>
-      </div>
+    <div v-if="fileList.length > 0" class="actions-area">
       <el-button type="primary" @click="upload" :loading="loading">
-        开始上传
+        开始上传 ({{ fileList.length }})
       </el-button>
+      <el-button @click="fileList = []" :disabled="loading">清空</el-button>
     </div>
   </div>
 </template>
@@ -38,35 +38,55 @@ export default {
   props: ['token'],
   data() {
     return {
-      file: null,
+      fileList: [],
       loading: false
     }
   },
   methods: {
-    handleFileChange(uploadFile) {
-      this.file = uploadFile.raw
+    handleChange(uploadFile, uploadFiles) {
+      this.fileList = uploadFiles
+    },
+    handleRemove(uploadFile, uploadFiles) {
+      this.fileList = uploadFiles
     },
     async upload() {
-      if (!this.file) return
-      const form = new FormData()
-      form.append('image', this.file)
+      if (this.fileList.length === 0) return
+      
       this.loading = true
-      try {
-        await axios.post(`${API}/images/`, form, {
-          headers: { 
-            'Content-Type': 'multipart/form-data',
-            'Authorization': `Token ${this.token}`
-          }
-        })
+      let successCount = 0
+      let failCount = 0
+      
+      const promises = this.fileList.map(async (file) => {
+        const form = new FormData()
+        form.append('image', file.raw)
+        try {
+          await axios.post(`${API}/images/`, form, {
+            headers: { 
+              'Content-Type': 'multipart/form-data',
+              'Authorization': `Token ${this.token}`
+            }
+          })
+          successCount++
+        } catch (err) {
+          console.error(err)
+          failCount++
+        }
+      })
+
+      await Promise.all(promises)
+      
+      if (successCount > 0) {
+        ElMessage.success(`成功上传 ${successCount} 张图片`)
         this.$emit('uploaded')
-        ElMessage.success('图片上传成功')
-        this.file = null
-      } catch (err) {
-        console.error(err)
-        ElMessage.error('上传失败')
-      } finally {
-        this.loading = false
       }
+      
+      if (failCount > 0) {
+        ElMessage.error(`${failCount} 张图片上传失败`)
+      } else {
+        this.fileList = []
+      }
+      
+      this.loading = false
     }
   }
 }
@@ -74,6 +94,7 @@ export default {
 
 <style scoped>
 .upload-container {
+  width: 800pt;
   text-align: center;
   padding: 10px;
 }
@@ -93,8 +114,6 @@ export default {
   height: 140px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   border: 2px dashed #dcdfe6;
   border-radius: 8px;
   transition: border-color 0.3s;
@@ -121,22 +140,10 @@ export default {
   font-weight: bold;
 }
 
-.preview-area {
+.actions-area {
   margin-top: 15px;
   display: flex;
-  align-items: center;
   justify-content: center;
   gap: 15px;
-  background: #f5f7fa;
-  padding: 10px;
-  border-radius: 4px;
-}
-
-.file-info {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #606266;
-  font-size: 14px;
 }
 </style>

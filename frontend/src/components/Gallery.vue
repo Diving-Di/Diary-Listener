@@ -122,19 +122,18 @@ export default {
 
 <style scoped>
 .gallery-grid {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 20px;
   margin-top: 20px;
 }
 
 .gallery-item {
-  width: 260px;
-  flex-shrink: 0;
+  width: 100%;
 }
 
 .image-wrapper {
-  height: 300px;
+  height: 220px;
   overflow: hidden;
   background-color: #f5f7fa;
   display: flex;

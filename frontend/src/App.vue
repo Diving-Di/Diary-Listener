@@ -3,7 +3,7 @@
     <el-header class="app-header">
       <div class="header-content container">
         <div class="logo">
-          <el-icon :size="24" style="vertical-align: middle; margin-right: 8px"><Picture /></el-icon>
+          <el-icon :size="24" style="vertical-align: middle; margin-right: 5px; "><Picture /></el-icon>
           <span>Image Manager</span>
         </div>
         <div v-if="token" class="user-info">
@@ -163,6 +163,8 @@ export default {
   justify-content: space-between;
   align-items: center;
   height: 60px;
+  position: relative;
+  top: -10px;
 }
 
 .logo {
@@ -171,6 +173,8 @@ export default {
   color: #409EFF;
   display: flex;
   align-items: center;
+  position: relative;
+  top: -10px;
 }
 
 .user-info {
