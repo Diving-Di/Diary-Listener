@@ -32,7 +32,7 @@
               {{ item.image.split('/').pop() }}
             </div>
 
-            <div v-if="(customTags(item).length) || item.exif_datetime || item.created || item.location || item.resolution" class="meta-area">
+            <div v-if="(customTags(item).length) || (aiTags(item).length) || item.exif_datetime || item.created || item.location || item.resolution" class="meta-area">
               <div v-if="customTags(item).length" class="tag-list">
                 <el-tag
                   v-for="t in customTags(item)"
@@ -41,6 +41,18 @@
                   class="tag-item"
                 >
                   {{ t.tag_name }}
+                </el-tag>
+              </div>
+
+              <div v-if="aiTags(item).length" class="tag-list">
+                <el-tag
+                  v-for="t in aiTags(item)"
+                  :key="'ai-' + (t.id || t.tag_name)"
+                  size="small"
+                  type="success"
+                  class="tag-item"
+                >
+                  AI: {{ t.tag_name }}
                 </el-tag>
               </div>
               <div v-if="item.exif_datetime" class="meta-line">拍摄时间：{{ formatDate(item.exif_datetime) }}</div>
@@ -79,6 +91,14 @@
           </div>
 
           <div class="card-actions">
+            <el-button
+              type="success"
+              circle
+              size="small"
+              :loading="aiLoading[item.id]"
+              @click="aiTag(item)"
+              title="AI生成标签"
+            >AI</el-button>
             <el-button type="danger" :icon="Delete" circle size="small" @click="remove(item.id)" />
           </div>
         </div>
@@ -111,7 +131,8 @@ export default {
       Delete,
       availableTagNames: [],
       editTagNames: {},
-      saving: {}
+      saving: {},
+      aiLoading: {}
     }
   },
   watch: {
@@ -190,6 +211,21 @@ export default {
           seen.add(name)
           result.push({ ...t, tag_name: name })
         }
+      }
+      return result
+    },
+
+    aiTags(item) {
+      const tags = (item && item.tags) ? item.tags : []
+      const seen = new Set()
+      const result = []
+      for (const t of tags) {
+        if (!t || t.tag_type !== 'AI') continue
+        const name = (t.tag_name || '').toString().trim()
+        if (!name) continue
+        if (seen.has(name)) continue
+        seen.add(name)
+        result.push({ ...t, tag_name: name })
       }
       return result
     },
@@ -284,6 +320,25 @@ export default {
           console.error(err)
           ElMessage.error('图片删除失败')
         }
+      }
+    },
+
+    async aiTag(item) {
+      if (!item || !item.id) return
+      if (!this.token) return
+      this.aiLoading = { ...this.aiLoading, [item.id]: true }
+      try {
+        await axios.post(`${API}/images/${item.id}/ai_tag/`, null, {
+          headers: { 'Authorization': `Token ${this.token}` }
+        })
+        ElMessage.success('AI标签已生成')
+        await this.fetchImages()
+      } catch (err) {
+        console.error(err)
+        const msg = err.response?.data?.detail || 'AI标签生成失败（可检查是否配置AI密钥）'
+        ElMessage.error(msg)
+      } finally {
+        this.aiLoading = { ...this.aiLoading, [item.id]: false }
       }
     },
     getFullUrl(url) {

@@ -1,3 +1,6 @@
+# Local secrets / runtime config
+backend/config/app_config.json
+backend/.env
 # OS
 .DS_Store
 Thumbs.db

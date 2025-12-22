@@ -20,9 +20,12 @@ services:
     command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - ./backend:/app
-      - media:/app/media
+      - ./backend/media:/app/media
     ports:
       - "8000:8000"
+    # 可选：将项目根目录下的 .env 注入容器（与 config/app_config.json 二选一）
+    # env_file:
+    #   - ./backend/.env
     environment:
       - PYTHONUNBUFFERED=1
       - DB_HOST=db
@@ -40,7 +43,8 @@ services:
       - ./frontend:/app
     ports:
       - "5173:5173"
+    environment:
+      - BACKEND_URL=http://backend:8000
 
 volumes:
-  media:
   db_data:

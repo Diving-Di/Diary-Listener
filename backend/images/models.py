@@ -67,7 +67,8 @@ def _extract_gps_lat_lng(exif_gps_info):
     return lat, lng
 
 class User(AbstractUser):
-    pass
+    # 覆写 AbstractUser.email：强制唯一，用于注册校验与登录信息一致性
+    email = models.EmailField('email address', unique=True)
 
 class Tag(models.Model):
     TAG_TYPES = (

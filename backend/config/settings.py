@@ -1,8 +1,13 @@
 import os
 from pathlib import Path
 
+from .runtime_config import load_runtime_config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load API keys / runtime settings from config/app_config.json or .env (if present)
+load_runtime_config(BASE_DIR)
 
 SECRET_KEY = 'django-insecure-demo-change-me'
 
@@ -56,7 +61,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
-# 智能数据库配置：
 # 1. 如果检测到 Docker 环境 (DB_HOST 存在)，使用 MySQL
 # 2. 否则 (本地调试)，自动回退到 SQLite，无需安装 MySQL 驱动
 if os.environ.get('DB_HOST'):

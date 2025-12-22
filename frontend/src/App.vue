@@ -201,11 +201,7 @@ export default {
     carouselSelectedIds: {
       deep: true,
       handler(v) {
-        try {
-          localStorage.setItem('carousel_selected_ids', JSON.stringify(v || []))
-        } catch (e) {
-          // ignore
-        }
+        localStorage.setItem('carousel_selected_ids', JSON.stringify(v || []))
       }
     }
   },
@@ -226,6 +222,7 @@ export default {
           }
         } catch (e) {
           // fallthrough
+          console.error(e)
         }
       }
       if (s.replace(/\s+/g, '') === '[]') return []
@@ -332,7 +329,7 @@ export default {
       this.username = ''
       this.displayUsername = ''
       this.password = ''
-      ElMessage.info('Logged out')
+      ElMessage.info('退出登录成功')
     },
     reload() {
       if (this.$refs.gallery && this.$refs.gallery.fetchImages) {

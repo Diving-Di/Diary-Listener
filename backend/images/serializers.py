@@ -1,5 +1,6 @@
 import json
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from urllib.parse import urlparse
 from .models import User, Image, Tag
 
@@ -58,10 +59,39 @@ class FlexibleStringListField(serializers.ListField):
         return super().to_internal_value(data)
 
 class UserSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())],
+    )
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(queryset=User.objects.all())],
+    )
+    password = serializers.CharField(
+        write_only=True,
+        required=True,
+        style={'input_type': 'password'},
+    )
+
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
+
+    def validate_username(self, value):
+        # 用户名至少 6 个字符
+        if value is None:
+            raise serializers.ValidationError('用户名不能为空')
+        if len(str(value)) < 6:
+            raise serializers.ValidationError('用户名长度需至少 6 个字符')
+        return value
+
+    def validate_password(self, value):
+        # 密码至少 6 个字符
+        if value is None:
+            raise serializers.ValidationError('密码不能为空')
+        if len(str(value)) < 6:
+            raise serializers.ValidationError('密码长度需至少 6 个字符')
+        return value
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)

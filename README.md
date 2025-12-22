@@ -27,7 +27,6 @@
 	python manage.py makemigrations && python manage.py migrate
 	python manage.py init_admin # create admin
 	python manage.py runserver 0.0.0.0:8000
-	python runserver 0.0.0.0:8000
 ``` 
 后端页面：`http://localhost:8000` 
 前端：
