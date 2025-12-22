@@ -24,6 +24,7 @@
 后端：
 ```bash
 	cd backend
+	pip install -r requirements.txt 
 	python manage.py makemigrations && python manage.py migrate
 	python manage.py init_admin # create admin
 	python manage.py runserver 0.0.0.0:8000
