@@ -1,0 +1,30 @@
+frontend/src/api/urls.ts
+  s_82a74d0271912b::t_03889e001c2d85 19-21
+  s_82a74d0271912b::t_6f95b699342088 17
+frontend/src/api/diary.ts
+  s_82a74d0271912b::t_8a2f39531b90f3 31-45
+backend/app/routers/diary.py
+  s_82a74d0271912b::t_982e60bb256b5d 88-93,99,109-136,139-147
+  s_82a74d0271912b::t_15daecacf76227 137-138
+  s_82a74d0271912b::t_8cfa3bb0c72b3b 10,15,29-37
+  s_82a74d0271912b::t_81eabf3ec258fb 13
+  s_82a74d0271912b::t_46e109afcd9e39 97-98,100-105
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "8b7e95e29810d75ca31137eed6a5a551b14c2b41",
+  "prompts": {},
+  "sessions": {
+    "s_82a74d0271912b": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a2d9860ff16be5c86a9effe",
+        "model": "openrouter-3o__dev"
+      },
+      "human_author": "jinshengdi <jinshengdi@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
