@@ -1,0 +1,43 @@
+backend/app/main.py
+  s_82a74d0271912b::t_777522feb3ac1d 12
+  s_82a74d0271912b::t_11a159d1facd1e 33
+  s_82a74d0271912b::t_b7d19ac6c4cf17 42-44
+  s_82a74d0271912b::t_db7c3aff06da7f 11
+frontend/src/components/settings/Settings.tsx
+  s_82a74d0271912b::t_5494dbdf145dc3 48-61,70-77,79,81-93
+  s_82a74d0271912b::t_bf570abf8fd312 1,3,5-13,15-47,62-69,78,80,94-98
+  s_82a74d0271912b::t_8558c994c7ec38 2,4,14
+backend/app/routers/settings.py
+  s_82a74d0271912b::t_175bf1ca2be22e 1-34
+frontend/src/types/index.ts
+  s_82a74d0271912b::t_c38ae4959fe1e2 32-35
+frontend/src/components/settings/Settings.css
+  s_82a74d0271912b::t_70db46880f0302 1-41
+backend/app/schemas.py
+  s_82a74d0271912b::t_0e020cc2963624 79-85
+  s_82a74d0271912b::t_6fc188af2d3745 70-78
+frontend/src/api/settings.ts
+  s_82a74d0271912b::t_7c13b193ba7e44 1-20
+frontend/src/App.tsx
+  s_82a74d0271912b::t_39a48737cc142d 75-81
+  s_82a74d0271912b::t_b18cc6652ad89b 57
+  s_82a74d0271912b::t_90f147487855c0 8,13,16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.2",
+  "base_commit_sha": "cd6938aa9d446df2dd1256996c9a646054dca2d2",
+  "prompts": {},
+  "sessions": {
+    "s_82a74d0271912b": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a2d9860ff16be5c86a9effe",
+        "model": "openrouter-3o__dev"
+      },
+      "human_author": "jinshengdi <jinshengdi@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}
