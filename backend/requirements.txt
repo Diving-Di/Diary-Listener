@@ -1,7 +1,6 @@
-Django>=4.2,<5
-djangorestframework
-Pillow
+fastapi
+uvicorn[standard]
+python-multipart
+sqlalchemy>=2.0
+pymysql
 gunicorn
-mysqlclient
-django-cors-headers
-

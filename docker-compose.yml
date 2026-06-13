@@ -2,7 +2,7 @@ services:
   db:
     image: mysql:8.0
     environment:
-      MYSQL_DATABASE: image_db
+      MYSQL_DATABASE: diary_db
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: rootpassword
@@ -17,19 +17,16 @@ services:
 
   backend:
     build: ./backend
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     volumes:
       - ./backend:/app
       - ./backend/media:/app/media
     ports:
       - "8000:8000"
-    # 可选：将项目根目录下的 .env 注入容器（与 config/app_config.json 二选一）
-    # env_file:
-    #   - ./backend/.env
     environment:
       - PYTHONUNBUFFERED=1
       - DB_HOST=db
-      - DB_NAME=image_db
+      - DB_NAME=diary_db
       - DB_USER=user
       - DB_PASSWORD=password
     depends_on:
@@ -38,9 +35,10 @@ services:
 
   frontend:
     build: ./frontend
-    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    command: sh -c "npm install && npm run dev"
     volumes:
       - ./frontend:/app
+      - /app/node_modules
     ports:
       - "5173:5173"
     environment:
