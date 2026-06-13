@@ -5,6 +5,20 @@
     "api_key": "",
     "base_url": "https://api.deepseek.com/v1",
     "model": "deepseek-chat",
-    "system_prompt": "你是一个温暖、贴心的 AI 助手，用简洁自然的中文与用户多轮对话。"
+    "system_prompt": "你是一个温暖、贴心的 AI 助手，用简洁自然的中文与用户多轮对话。",
+    "vision": {
+      "api_key": "",
+      "base_url": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+      "model": "qwen-vl-plus",
+      "prompt": "请用一句简洁的中文描述这张图片的主要内容、场景与情绪氛围，聚焦可能反映用户心情或经历的细节，不要超过60字，直接输出描述。"
+    }
+  },
+  "memory": {
+    "enabled": true,
+    "embedding_model": "BAAI/bge-small-zh-v1.5",
+    "recent_n": 5,
+    "top_k": 5,
+    "char_budget": 1800,
+    "profile_refresh_every": 3
   }
 }

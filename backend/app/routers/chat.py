@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 
 from ..ai import generate_reply
 from ..database import get_db
+from ..memory import build_diary_context
 from ..models import Conversation, Message, User
 from ..schemas import (
     ChatIn,
@@ -92,7 +93,8 @@ def send_message(
         {"role": m.role, "content": m.content}
         for m in conv.messages[-_MAX_HISTORY:]
     ]
-    reply = generate_reply(history)
+    diary_context = build_diary_context(db, user, content)
+    reply = generate_reply(history, diary_context=diary_context)
 
     assistant_msg = Message(conversation_id=conv.id, role="assistant", content=reply)
     db.add(assistant_msg)

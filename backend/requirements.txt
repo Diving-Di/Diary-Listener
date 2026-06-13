@@ -4,3 +4,5 @@ python-multipart
 sqlalchemy>=2.0
 pymysql
 gunicorn
+sentence-transformers>=3.0.0
+numpy
