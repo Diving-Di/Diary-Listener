@@ -29,3 +29,7 @@ export interface DiaryEntry {
   content: string
   created_at: string
 }
+
+export interface UserSettings {
+  allow_ai_diary: boolean
+}

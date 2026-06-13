@@ -5,13 +5,15 @@ import {
   LogoutOutlined,
   MessageOutlined,
   RobotOutlined,
+  SettingOutlined,
 } from '@ant-design/icons'
 import Auth from './components/auth/Auth'
 import Chat from './components/chat/Chat'
 import Diary from './components/diary/Diary'
+import Settings from './components/settings/Settings'
 import './App.css'
 
-type FeatureKey = 'chat' | 'diary'
+type FeatureKey = 'chat' | 'diary' | 'settings'
 
 export default function App() {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('token'))
@@ -52,6 +54,7 @@ export default function App() {
           items={[
             { key: 'chat', icon: <MessageOutlined />, label: '聊天' },
             { key: 'diary', icon: <EditOutlined />, label: '日记' },
+            { key: 'settings', icon: <SettingOutlined />, label: '设置' },
           ]}
         />
 
@@ -69,7 +72,13 @@ export default function App() {
       </nav>
 
       <main className="app-content">
-        {feature === 'chat' ? <Chat token={token} /> : <Diary token={token} />}
+        {feature === 'chat' ? (
+          <Chat token={token} />
+        ) : feature === 'diary' ? (
+          <Diary token={token} />
+        ) : (
+          <Settings token={token} />
+        )}
       </main>
     </div>
   )

@@ -67,3 +67,19 @@ class DiaryOut(BaseModel):
     image: Optional[str] = None
     content: str
     created_at: datetime
+
+
+# ---- settings ----
+class SettingsOut(BaseModel):
+    allow_ai_diary: bool
+
+
+class SettingsIn(BaseModel):
+    allow_ai_diary: bool
+
+
+# ---- diary reindex ----
+class ReindexOut(BaseModel):
+    processed: int  # entries scanned
+    captioned: int  # entries that got a new image caption
+    embedded: int   # entries whose vector was (re)built

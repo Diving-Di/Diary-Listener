@@ -8,7 +8,8 @@ from fastapi.staticfiles import StaticFiles
 
 from .config import get_config
 from .database import init_db
-from .routers import auth, chat, diary
+from . import embeddings
+from .routers import auth, chat, diary, settings
 
 config = get_config()
 
@@ -29,6 +30,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(chat.router)
 app.include_router(diary.router)
+app.include_router(settings.router)
 
 os.makedirs(config["media_dir"], exist_ok=True)
 app.mount("/media", StaticFiles(directory=config["media_dir"]), name="media")
@@ -37,6 +39,9 @@ app.mount("/media", StaticFiles(directory=config["media_dir"]), name="media")
 @app.on_event("startup")
 def on_startup() -> None:
     init_db()
+    # Preload the embedding model in the background so the first diary/chat
+    # request doesn't pay the model load (and first-time download) cost.
+    embeddings.warmup()
 
 
 @app.get("/healthz", tags=["system"])
