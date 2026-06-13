@@ -28,3 +28,18 @@ export async function createDiaryEntry(
 export async function deleteDiaryEntry(token: string, id: number): Promise<void> {
   await http.delete(apiUrls.diary.detail(id), { headers: authHeaders(token) })
 }
+
+export interface ReindexResult {
+  processed: number
+  captioned: number
+  embedded: number
+}
+
+export async function reindexDiary(token: string): Promise<ReindexResult> {
+  const res = await http.post<ReindexResult>(
+    apiUrls.diary.reindex,
+    {},
+    { headers: authHeaders(token) },
+  )
+  return res.data
+}

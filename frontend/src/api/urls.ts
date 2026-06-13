@@ -14,5 +14,10 @@ export const apiUrls = {
     list: `${API_BASE_URL}/diary/`,
     create: `${API_BASE_URL}/diary/`,
     detail: (id: number) => `${API_BASE_URL}/diary/${id}/`,
+    reindex: `${API_BASE_URL}/diary/reindex/`,
+  },
+  settings: {
+    get: `${API_BASE_URL}/settings/`,
+    update: `${API_BASE_URL}/settings/`,
   },
 }
